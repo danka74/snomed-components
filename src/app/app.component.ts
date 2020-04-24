@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { SnomedAutocompleteComponent } from './snomed-autocomplete/snomed-autocomplete.component';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
+
+  @ViewChild('levnadsvanor') levnadsvanor: SnomedAutocompleteComponent; // ElementRef<HTMLInputElement>;
+  @ViewChild('annat') annat: SnomedAutocompleteComponent; // ElementRef<HTMLInputElement>;
 
   constructor() {
   }

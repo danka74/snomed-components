@@ -1,2 +1,24 @@
+<form>
+  <mat-card class="information-card">
+    <mat-card-header class="information-header">
+      <mat-card-title>Information</mat-card-title>
+      <img mat-card-avatar src="assets/avatar.png">
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field class="information-form-field">
+        <mat-label>Kontaktorsak</mat-label>
 
-<app-my-nav></app-my-nav>
+        <app-snomed-autocomplete #annat ecl="^64691000052109" required placeholder="Snomed-begrepp">
+        </app-snomed-autocomplete>
+        <mat-hint>Fyll i lite fler lämpliga Snomed-begrepp</mat-hint>
+      </mat-form-field>
+      <mat-form-field class="information-form-field">
+        <mat-label>Levandsvana</mat-label>
+
+        <app-snomed-autocomplete #levnadsvanor ecl="<<(^46051000052106)" required placeholder="Snomed-begrepp">
+        </app-snomed-autocomplete>
+        <mat-hint>Fyll i lite lämpliga Snomed-begrepp</mat-hint>
+      </mat-form-field>
+    </mat-card-content>
+  </mat-card>
+</form>

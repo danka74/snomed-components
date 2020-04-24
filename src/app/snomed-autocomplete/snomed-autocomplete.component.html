@@ -1,25 +1,28 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<form [formGroup]="snomedForm" class="snomed-form">
-
-  <mat-form-field class="full-width">
-    <mat-chip-list #chipList>
-        <mat-chip *ngFor="let concept of selected"
-            (removed)="remove(concept)">
-          {{concept}}
+<div [formGroup]="snomedForm" class="snomed-form">
+    <mat-chip-list #chipList class="full-width">
+      <mat-chip *ngFor="let concept of value" (removed)="remove(concept)">
+        {{ concept }}
         <mat-icon matChipRemove>cancel</mat-icon>
       </mat-chip>
     </mat-chip-list>
-    <input type="text" placeholder="Snomed CT-begrepp" matInput formControlName="search" [matAutocomplete]="auto"
-      [matChipInputFor]="chipList" [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="clear($event)">
-    <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)="select($event)">
+    <input
+      #search
+      class="full-width"
+      type="text"
+      formControlName="search"
+      [matAutocomplete]="auto"
+      [matChipInputFor]="chipList"
+      [matChipInputAddOnBlur]="true"
+      (matChipInputTokenEnd)="clear($event)"
+    />
+    <mat-autocomplete class="full-width"
+      #auto="matAutocomplete"
+      autoActiveFirstOption
+      (optionSelected)="select($event)"
+    >
       <mat-option *ngFor="let term of result" [value]="term">
         {{ term }}
       </mat-option>
     </mat-autocomplete>
-  </mat-form-field>
-  <!-- <mat-checkbox formControlName="limitToECL" (click)="onLimit()">begränsa urvalet</mat-checkbox> -->
-  <mat-form-field class="full-width">
-    <input  matInput type="text" placeholder="ECL" formControlName="ecl">
-  </mat-form-field>
-
-</form>
+  </div>

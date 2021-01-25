@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Injectable()
 export class SnomedService {
 
-  readonly baseUrl: string = "http://localhost:4200/fhir/ValueSet/$expand?url=http://snomed.info/sct/45991000052106/version/UNVERSIONED?";
+  readonly baseUrl: string = "http://localhost:4200/fhir/ValueSet/$expand?url=http://snomed.info/sct/45991000052106?";
   // readonly baseUrl: string = 'http://localhost:4200/MAIN/SNOMEDCT-SE/concepts?activeFilter=true';
 
 

@@ -3,11 +3,11 @@ import { SnomedService } from '../snomed.service';
 import { FormControl, FormGroup, NgControl } from '@angular/forms';
 import { Subscription, Subject } from 'rxjs';
 import {
-  map,
   filter,
   debounceTime,
   distinctUntilChanged,
-  switchMap
+  switchMap,
+  tap
 } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
@@ -27,7 +27,10 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
 
   // snomed form related properties
   @Input() ecl: string;
+  @Input() multi: boolean = false;
+
   result = [];
+
   snomedForm: FormGroup = new FormGroup({
     search: new FormControl()
   });
@@ -46,6 +49,11 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
   get value(): string[] {
     return this._selection;
   }
+
+  get firstSelected(): string {
+    return this._selection[0];
+  }
+
   private _selection: string[] = [];
 
   @ViewChild('search') search: ElementRef<HTMLInputElement>;
@@ -74,13 +82,13 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
   }
 
   get empty() {
-    console.log('empty() ' + (this.search ? this.search.nativeElement.value : ''));
+    // console.log('empty() ' + (this.search ? this.search.nativeElement.value : ''));
     return this._selection.length === 0 && !(this.search ? this.search.nativeElement.value : false);
   }
 
   @HostBinding('class.floating')
   get shouldLabelFloat() {
-    console.log('float?: ' + (this.focused) + ' ' + (!this.empty));
+    // console.log('float?: ' + (this.focused) + ' ' + (!this.empty));
     return this.focused || !this.empty;
   }
 
@@ -124,6 +132,7 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
       filter(text => text.length > 2),
       debounceTime(10),
       distinctUntilChanged(),
+      // tap(console.log),
       switchMap(text => this.snomedService.search(text, this.ecl))
     );
     this.typeaheadSubscription = typeahead.subscribe(data => {
@@ -149,6 +158,7 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
 
     if ((option.value || '').trim()) {
       this.value.push(option.value.trim());
+      console.log(option.value);
     }
 
     this.search.nativeElement.value = '';

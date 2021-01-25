@@ -6,19 +6,20 @@
     </mat-card-header>
     <mat-card-content>
       <mat-form-field class="information-form-field">
-        <mat-label>Kontaktorsak</mat-label>
+        <mat-label>Fraktur</mat-label>
 
-        <app-snomed-autocomplete #annat ecl="<<762766007 | ätlig substans |" required placeholder="Snomed-begrepp">
+        <app-snomed-autocomplete #fraktur ecl="<<125605004 | fraktur i skelettben |" required placeholder="Snomed-begrepp">
         </app-snomed-autocomplete>
         <mat-hint>Fyll i lite fler lämpliga Snomed-begrepp</mat-hint>
       </mat-form-field>
       <mat-form-field class="information-form-field">
-        <mat-label>Levandsvana</mat-label>
+        <mat-label>Ben</mat-label>
 
-        <app-snomed-autocomplete #levnadsvanor ecl="<<(^46051000052106)" required placeholder="Snomed-begrepp">
+        <app-snomed-autocomplete #levnadsvanor ecl="<<({{fraktur.firstSelected || 125605004}}.363698007)" required placeholder="Snomed-begrepp">
         </app-snomed-autocomplete>
         <mat-hint>Fyll i lite lämpliga Snomed-begrepp</mat-hint>
       </mat-form-field>
     </mat-card-content>
   </mat-card>
 </form>
+<div>{{ fraktur.value }}</div>

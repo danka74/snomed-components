@@ -163,6 +163,10 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
 
     this.search.nativeElement.value = '';
 
+    if (!this.multi) {
+      this.disabled = true;
+    }
+
     this.stateChanges.next();
   }
 
@@ -172,6 +176,11 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
     if (index >= 0) {
       this.value.splice(index, 1);
     }
+
+    if (this.disabled) {
+      this.disabled = false;
+    }
+
     this.stateChanges.next();
   }
 

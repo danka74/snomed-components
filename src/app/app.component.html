@@ -8,14 +8,14 @@
       <mat-form-field class="information-form-field">
         <mat-label>Fraktur</mat-label>
 
-        <app-snomed-autocomplete #fraktur ecl="<<125605004 | fraktur i skelettben |" required placeholder="Snomed-begrepp">
+        <app-snomed-autocomplete multi="false" #fraktur ecl="<<125605004 | fraktur i skelettben |" required placeholder="Snomed-begrepp">
         </app-snomed-autocomplete>
         <mat-hint>Fyll i lite fler lämpliga Snomed-begrepp</mat-hint>
       </mat-form-field>
       <mat-form-field class="information-form-field">
         <mat-label>Ben</mat-label>
 
-        <app-snomed-autocomplete #ben ecl="<<({{fraktur.firstSelected || 125605004}}.363698007)" required placeholder="Snomed-begrepp">
+        <app-snomed-autocomplete multi="true" #ben ecl="<<({{fraktur.firstSelected || 125605004}}.363698007)" required placeholder="Snomed-begrepp">
         </app-snomed-autocomplete>
         <mat-hint>Fyll i lite lämpliga Snomed-begrepp</mat-hint>
       </mat-form-field>

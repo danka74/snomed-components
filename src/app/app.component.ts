@@ -8,8 +8,6 @@ import { SnomedAutocompleteComponent } from './snomed-autocomplete/snomed-autoco
 })
 export class AppComponent implements OnInit {
 
-  @ViewChild('levnadsvanor') levnadsvanor: SnomedAutocompleteComponent; // ElementRef<HTMLInputElement>;
-  @ViewChild('annat') annat: SnomedAutocompleteComponent; // ElementRef<HTMLInputElement>;
 
   constructor() {
   }

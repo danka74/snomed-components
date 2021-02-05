@@ -19,6 +19,20 @@
         </app-snomed-autocomplete>
         <mat-hint>Fyll i lite lämpliga Snomed-begrepp</mat-hint>
       </mat-form-field>
+      <mat-form-field class="information-form-field">
+        <mat-label>Allergen</mat-label>
+
+        <app-snomed-autocomplete multi="true" #mat ecl="<<762766007 | ätlig substans |" required placeholder="Snomed-begrepp">
+        </app-snomed-autocomplete>
+        <mat-hint>Fyll i lite lämpliga Snomed-begrepp</mat-hint>
+      </mat-form-field>
+      <mat-form-field class="information-form-field">
+        <mat-label>Kontaktorsak</mat-label>
+
+        <app-snomed-autocomplete multi="true" #ko ecl="^60001000052100" required placeholder="Snomed-begrepp">
+        </app-snomed-autocomplete>
+        <mat-hint>Fyll i lite lämpliga Snomed-begrepp</mat-hint>
+      </mat-form-field>
     </mat-card-content>
   </mat-card>
 </form>

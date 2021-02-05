@@ -18,7 +18,7 @@ export class SnomedService {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type':  'application/json',
-        'Accept-Language': 'sv',
+        'Accept-Language': 'sv-X-64311000052107',
       })
     };
     if (term && term.length > 0) {

@@ -21,6 +21,7 @@ import { SnomedAutocompleteComponent } from './snomed-autocomplete/snomed-autoco
 import { LayoutModule } from '@angular/cdk/layout';
 import {MatCardModule} from '@angular/material/card';
 import {MatDividerModule} from '@angular/material/divider';
+import { SnomedMapComponent } from './snomed-map/snomed-map.component';
 
 
 
@@ -28,6 +29,7 @@ import {MatDividerModule} from '@angular/material/divider';
   declarations: [
     AppComponent,
     SnomedAutocompleteComponent,
+    SnomedMapComponent,
   ],
   imports: [
     BrowserModule,

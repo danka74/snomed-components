@@ -1,5 +1,11 @@
 {
-  "/fhir/*": {
+  "/snowstorm/snomed-ct/fhir/*": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/snowstorm/snomed-ct/MAIN/*": {
     "target": "http://localhost:8080",
     "secure": false,
     "logLevel": "debug",

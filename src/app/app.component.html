@@ -33,6 +33,18 @@
         </app-snomed-autocomplete>
         <mat-hint>Fyll i lite lämpliga Snomed-begrepp</mat-hint>
       </mat-form-field>
+      <mat-form-field class="information-form-field">
+        <mat-label>Yrke</mat-label>
+        <app-snomed-autocomplete multi="false" #yrke ecl="^68581000052104 | urval yrken |" required placeholder="Snomed-begrepp">
+        </app-snomed-autocomplete>
+        <mat-hint>
+          SOSNYK:
+          <app-snomed-map conceptId="{{yrke.firstSelected}}" mapId="1234567890"></app-snomed-map>
+          <span class="spacing"></span>
+          AID:
+          <app-snomed-map conceptId="{{yrke.firstSelected}}" mapId="1234567891"></app-snomed-map>
+        </mat-hint>
+      </mat-form-field>
     </mat-card-content>
   </mat-card>
 </form>

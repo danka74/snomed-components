@@ -28,6 +28,7 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
   // snomed form related properties
   @Input() ecl: string;
   @Input() multi: boolean = false;
+  @Input() langRefset: string;
 
   result = [];
 
@@ -133,7 +134,7 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
       debounceTime(10),
       distinctUntilChanged(),
       // tap(console.log),
-      switchMap(text => this.snomedService.search(text, this.ecl))
+      switchMap(text => this.snomedService.search(text, this.ecl, this.langRefset))
     );
     this.typeaheadSubscription = typeahead.subscribe(data => {
       console.log(data);

@@ -13,14 +13,15 @@ export class SnomedService {
 
   constructor(private http: HttpClient) { }
 
-  search(term: string, ecl: string): any {
+  search(term: string, ecl: string, langRefset: string): any {
 
     console.log(ecl);
+    console.log(langRefset);
 
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type':  'application/json',
-        'Accept-Language': 'sv',
+        'Accept-Language': 'sv' + (langRefset !== undefined ? '-X-' + langRefset : ''),
       })
     };
     if (term && term.length > 0) {

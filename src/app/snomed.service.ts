@@ -7,7 +7,7 @@ import { from, Observable } from 'rxjs';
 @Injectable()
 export class SnomedService {
 
-  readonly baseUrl: string = "/snowstorm/fhir/ValueSet/$expand?url=http://snomed.info/sct/45991000052106?";
+  readonly baseUrl: string = "/snowstorm/snomed-ct/fhir/ValueSet/$expand?url=http://snomed.info/sct/45991000052106?";
   // readonly baseUrl: string = 'http://localhost:4200/MAIN/SNOMEDCT-SE/concepts?activeFilter=true';
 
 
@@ -24,7 +24,7 @@ export class SnomedService {
       })
     };
     if (term && term.length > 0) {
-      return this.http.get('/snowstorm/fhir/ValueSet/$expand?url=http://snomed.info/sct/45991000052106?fhir_vs=ecl/' +
+      return this.http.get('/snowstorm/snomed-ct/fhir/ValueSet/$expand?url=http://snomed.info/sct/45991000052106?fhir_vs=ecl/' +
          ((ecl != null && ecl !== '') ? encodeURIComponent(ecl) : '<<404684003') + // default to Clinical finding
          '&filter=' + encodeURIComponent(term) + '&offset=0&count=10', httpOptions);
     } else {
@@ -40,7 +40,7 @@ export class SnomedService {
       })
     };
     if (conceptId && conceptId.length > 0) {
-      return this.http.get('/snowstorm/MAIN/SNOMEDCT-SE/MAPTEST1/members?referenceSet=' +
+      return this.http.get('/snowstorm/snomed-ct/MAIN/SNOMEDCT-SE/MAPTEST1/members?referenceSet=' +
         mapId + '&referencedComponentId=' + conceptId + '&offset=0&limit=10', httpOptions).pipe(
            map((data: any) => {
              const result = [];

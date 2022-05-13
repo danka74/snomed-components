@@ -1,0 +1,14 @@
+#map {
+  width: 100%;
+  z-index: -1;
+}
+
+#form-container {
+  z-index: 1;
+  position: relative;
+}
+
+.sct-input {
+  position: absolute;
+  width: 300px;
+}

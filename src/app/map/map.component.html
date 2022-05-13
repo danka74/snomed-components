@@ -1,0 +1,10 @@
+<div id="form-container">
+  <img id="map" src="./assets/europe.svg" />
+  <form [formGroup]="form">
+      <div *ngFor="let c of countries; index as i" formArrayName="countries">
+        <mat-form-field class="sct-input" style="top: {{c.top}}; left: {{c.left}}">
+          <app-snomed-autocomplete #country [url]="c.url" lang="{{c.lang}}" placeholder="{{c.name}}" (change)="onChange(country.firstSelected, i)"></app-snomed-autocomplete>
+        </mat-form-field>
+      </div>
+  </form>
+</div>

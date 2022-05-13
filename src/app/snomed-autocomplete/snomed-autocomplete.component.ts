@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, HostBinding, ElementRef, ViewChild } from '@angular/core';
 import { SnomedService } from '../snomed.service';
-import { FormControl, FormGroup, NgControl } from '@angular/forms';
+import { ControlValueAccessor, FormControl, FormGroup, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription, Subject } from 'rxjs';
 import {
   filter,
@@ -19,18 +19,32 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
   selector: 'app-snomed-autocomplete',
   templateUrl: './snomed-autocomplete.component.html',
   styleUrls: ['./snomed-autocomplete.component.css'],
-  providers: [{provide: MatFormFieldControl, useExisting: SnomedAutocompleteComponent}],
+  providers: [
+    {
+      provide: MatFormFieldControl,
+      useExisting: SnomedAutocompleteComponent
+    },
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: SnomedAutocompleteComponent,
+      multi: true
+    }
+  ],
 })
-export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<string[]> {
+export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<string[]>, ControlValueAccessor {
   static nextId = 0;
   @HostBinding() id = `snomed-autocomplete-${SnomedAutocompleteComponent.nextId++}`;
 
   // snomed form related properties
   @Input() ecl: string;
   @Input() multi: boolean = false;
-  @Input() langRefset: string;
+  @Input() lang: string;
+  @Input() url: string = 'http://snomed.info/sct';
+  @Input() parentForm: FormGroup;
 
   result = [];
+
+  onChange;
 
   snomedForm: FormGroup = new FormGroup({
     search: new FormControl()
@@ -47,20 +61,20 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
     this.stateChanges.next();
   }
 
-  get value(): string[] {
+  public get value(): string[] {
     return this._selection;
   }
 
-  get firstSelected(): string {
+  public get firstSelected(): string {
     return this._selection[0];
   }
 
-  private _selection: string[] = [];
+  _selection: string[] = [];
 
   @ViewChild('search') search: ElementRef<HTMLInputElement>;
 
   // material forms related properties
- @Input()
+  @Input()
   get placeholder() {
     return this._placeholder;
   }
@@ -70,16 +84,49 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
   }
   private _placeholder: string;
 
+  set conceptId(sctid: string) {
+    const search = this.snomedService.search(sctid, this.ecl, this.url, this.lang);
+    search.subscribe(data => {
+      const res = data['expansion']['contains'];
+      if (res) {
+        this.value.push(res[0].code + ' | ' + res[0].display + ' |');
+        this.search.nativeElement.value = '';
+        this.stateChanges.next();
+      }
+    });
+  }
+
   ngControl: NgControl = null;
 
   stateChanges = new Subject<void>();
 
   focused = false;
-  constructor(private snomedService: SnomedService, private fm: FocusMonitor, private elRef: ElementRef<HTMLElement>) {
+
+  constructor(
+    private snomedService: SnomedService,
+    private fm: FocusMonitor,
+    private elRef: ElementRef<HTMLElement>) {
     fm.monitor(elRef.nativeElement, true).subscribe(origin => {
       this.focused = !!origin;
       this.stateChanges.next();
     });
+  }
+
+  writeValue(obj: any): void {
+    console.log(obj);
+    this.value = obj;
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 
   get empty() {
@@ -129,21 +176,30 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
   }
 
   ngOnInit() {
+    if(this.parentForm) {
+      this.snomedForm.setParent(this.parentForm);
+    }
     const typeahead = this.snomedForm.get('search').valueChanges.pipe(
       filter(text => text.length > 2),
       debounceTime(10),
       distinctUntilChanged(),
       // tap(console.log),
-      switchMap(text => this.snomedService.search(text, this.ecl, this.langRefset))
+      switchMap(text => this.snomedService.search(text, this.ecl, this.url, this.lang))
     );
     this.typeaheadSubscription = typeahead.subscribe(data => {
-      console.log(data);
-      this.result = [];
-      // console.log(data);
-      if (data['expansion']['contains']) {
-        data['expansion']['contains'].forEach((element: any) =>
-          this.result.push(element.code + ' | ' + element.display + ' |')
-        );
+      if (this.multi || this._selection.length === 0) {
+        this.result = [];
+        const res = data['expansion']['contains'];
+        if (res) {
+          if (res.length === 1) {
+            this.value.push(res[0].code + ' | ' + res[0].display + ' |');
+            this.search.nativeElement.value = '';
+            this.stateChanges.next();
+          } else {
+            res.forEach((element: any) =>
+              this.result.push(element.code + ' | ' + element.display + ' |'));
+          }
+        }
       }
     });
   }
@@ -154,19 +210,17 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
   }
 
   select(event: MatAutocompleteSelectedEvent): void {
-    console.log(this.search.nativeElement.value);
+    //console.log(this.search.nativeElement.value);
     const option = event.option;
 
     if ((option.value || '').trim()) {
       this.value.push(option.value.trim());
-      console.log(option.value);
+      //console.log(option.value);
     }
 
     this.search.nativeElement.value = '';
 
-    if (!this.multi) {
-      this.disabled = true;
-    }
+    this.result = [];
 
     this.stateChanges.next();
   }
@@ -178,15 +232,11 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
       this.value.splice(index, 1);
     }
 
-    if (this.disabled) {
-      this.disabled = false;
-    }
-
     this.stateChanges.next();
   }
 
   clear(event: MatChipInputEvent): void {
-    console.log(event);
+    // console.log(event);
 
     this.search.nativeElement.value = '';
 

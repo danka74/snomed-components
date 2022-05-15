@@ -1,6 +1,6 @@
 {
-  "/snowstorm/*": {
-    "target": "http://localhost:8080",
+  "/snowstorm/snomed-ct/*": {
+    "target": "https://browser.ihtsdotools.org/snowstorm/snomed-ct/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true

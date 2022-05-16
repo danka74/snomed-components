@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostBinding, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, HostBinding, EventEmitter, ElementRef, ViewChild, Optional, Self, Renderer2, Output } from '@angular/core';
 import { SnomedService } from '../snomed.service';
 import { ControlValueAccessor, FormControl, FormGroup, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription, Subject } from 'rxjs';
@@ -24,17 +24,16 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
       provide: MatFormFieldControl,
       useExisting: SnomedAutocompleteComponent
     },
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: SnomedAutocompleteComponent,
-      multi: true
-    }
+    // {
+    //  provide: NG_VALUE_ACCESSOR,
+    //  useExisting: forwardRef(() => SnomedAutocompleteComponent),
+    //  multi: true
+    // }
   ],
 })
 export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<string[]>, ControlValueAccessor {
   static nextId = 0;
   @HostBinding() id = `snomed-autocomplete-${SnomedAutocompleteComponent.nextId++}`;
-
   // snomed form related properties
   @Input() ecl: string;
   @Input() multi: boolean = false;
@@ -42,9 +41,10 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
   @Input() url: string = 'http://snomed.info/sct';
   @Input() parentForm: FormGroup;
 
+  @Output() changed: EventEmitter<string[]> = new EventEmitter();
   result = [];
 
-  onChange;
+  onChange = null;
 
   snomedForm: FormGroup = new FormGroup({
     search: new FormControl()
@@ -62,6 +62,7 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
   }
 
   public get value(): string[] {
+    
     return this._selection;
   }
 
@@ -96,24 +97,30 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
     });
   }
 
-  ngControl: NgControl = null;
-
   stateChanges = new Subject<void>();
 
   focused = false;
 
+  // ngControl: NgControl = null;
+  
   constructor(
+    @Optional() @Self() public ngControl: NgControl,
     private snomedService: SnomedService,
     private fm: FocusMonitor,
-    private elRef: ElementRef<HTMLElement>) {
-    fm.monitor(elRef.nativeElement, true).subscribe(origin => {
-      this.focused = !!origin;
-      this.stateChanges.next();
-    });
+    private elRef: ElementRef<HTMLElement>,
+    private renderer: Renderer2) {
+      // if (this.ngControl != null) {
+      //   // Setting the value accessor directly (instead of using
+      //   // the providers) to avoid running into a circular import.
+      //   this.ngControl.valueAccessor = this;
+      // }
+      fm.monitor(elRef.nativeElement, true).subscribe(origin => {
+        this.focused = !!origin;
+        this.stateChanges.next();
+      });
   }
 
   writeValue(obj: any): void {
-    console.log(obj);
     this.value = obj;
   }
 
@@ -216,13 +223,16 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
     if ((option.value || '').trim()) {
       this.value.push(option.value.trim());
       //console.log(option.value);
+
+      this.search.nativeElement.value = '';
+
+      this.result = [];
+
+      this.stateChanges.next();
+
+      this.changed.emit(this.value);
     }
 
-    this.search.nativeElement.value = '';
-
-    this.result = [];
-
-    this.stateChanges.next();
   }
 
   remove(concept: any): void {

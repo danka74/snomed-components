@@ -1,5 +1,5 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { Form, FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { Form, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { SnomedAutocompleteComponent } from '../snomed-autocomplete/snomed-autocomplete.component';
 
 @Component({
@@ -51,32 +51,44 @@ export class MapComponent implements OnInit {
 
   form: FormGroup;
 
-  constructor(fb: FormBuilder) { }
+  get countryControls() { 
+    const fa = this.form.controls['countries'] as FormArray;
+    return fa.controls as FormControl[];
+  }
+
+  constructor(private fb: FormBuilder) { }
 
   ngAfterViewInit(): void {
-
+    this.countryComponents.changes.subscribe(x => {
+      console.log(x);
+    })
   }
 
   ngOnInit(): void {
-    this.form = new FormGroup({
-      countries: new FormArray([])});
+    this.form = this.fb.group({
+      countries: this.fb.array([])
+    });
+
+    this.countries.forEach((c) => {
+      this.countryControls.push(this.fb.control([]));
+    })
 
     this.form.valueChanges.subscribe(x => {
       console.log(x);
     });
   }
 
-  onChange(value: string, i: number) {
-    /* console.log(value);
-    console.log(JSON.stringify(value));
-    console.log(value);
-    console.log(value.length);
+  onChange(value: SnomedAutocompleteComponent, i: number) {
+    const selected: string = value.firstSelected;
+    const sctid = selected.slice(0, selected.indexOf('|')).trim();
+    console.log(sctid);
+
     // value.forEach(e => console.log(e));
     this.countryComponents.forEach((countryComponent, index) => {
       if (index !== i) {
         console.log(this.countries[index].name);
-        //countryComponent.conceptId = '404684003';
+        countryComponent.conceptId = sctid;
       }
-    })*/
+    });
   }
 }

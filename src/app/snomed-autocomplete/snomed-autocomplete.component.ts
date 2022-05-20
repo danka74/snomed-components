@@ -90,7 +90,13 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
     search.subscribe(data => {
       const res = data['expansion']['contains'];
       if (res) {
-        this.value.push(res[0].code + ' | ' + res[0].display + ' |');
+        this.result = [];
+        this.clear(null);
+        if (res[0].display) {
+          this.value = [(res[0].code + ' | ' + res[0].display + ' |')];
+        } else {
+          this.value = [(res[0].code + ' | - |')];
+        }
         this.search.nativeElement.value = '';
         this.stateChanges.next();
       }

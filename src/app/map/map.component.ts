@@ -80,10 +80,7 @@ export class MapComponent implements OnInit {
 
   onChange(value: SnomedAutocompleteComponent, i: number) {
     const selected: string = value.firstSelected;
-    const sctid = selected.slice(0, selected.indexOf('|')).trim();
-    console.log(sctid);
-
-    // value.forEach(e => console.log(e));
+    const sctid = value.firstSelected.slice(0, selected.indexOf('|')).trim();
     this.countryComponents.forEach((countryComponent, index) => {
       if (index !== i) {
         console.log(this.countries[index].name);

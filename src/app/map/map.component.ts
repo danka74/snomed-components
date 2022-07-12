@@ -1,5 +1,5 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { Form, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Form, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { SnomedAutocompleteComponent } from '../snomed-autocomplete/snomed-autocomplete.component';
 
 @Component({
@@ -49,14 +49,14 @@ export class MapComponent implements OnInit {
 
   @ViewChildren('country') countryComponents: QueryList<SnomedAutocompleteComponent>;
 
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   get countryControls() { 
-    const fa = this.form.controls['countries'] as FormArray;
-    return fa.controls as FormControl[];
+    const fa = this.form.controls['countries'] as UntypedFormArray;
+    return fa.controls as UntypedFormControl[];
   }
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: UntypedFormBuilder) { }
 
   ngAfterViewInit(): void {
     this.countryComponents.changes.subscribe(x => {

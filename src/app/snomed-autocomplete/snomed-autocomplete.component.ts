@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, HostBinding, EventEmitter, ElementRef, ViewChild, Optional, Self, Renderer2, Output } from '@angular/core';
 import { SnomedService } from '../snomed.service';
-import { ControlValueAccessor, FormControl, FormGroup, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, UntypedFormControl, UntypedFormGroup, NgControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription, Subject } from 'rxjs';
 import {
   filter,
@@ -39,15 +39,15 @@ export class SnomedAutocompleteComponent implements OnInit, MatFormFieldControl<
   @Input() multi: boolean = false;
   @Input() lang: string;
   @Input() url: string = 'http://snomed.info/sct';
-  @Input() parentForm: FormGroup;
+  @Input() parentForm: UntypedFormGroup;
 
   @Output() changed: EventEmitter<string[]> = new EventEmitter();
   result = [];
 
   onChange = null;
 
-  snomedForm: FormGroup = new FormGroup({
-    search: new FormControl()
+  snomedForm: UntypedFormGroup = new UntypedFormGroup({
+    search: new UntypedFormControl()
   });
 
   typeaheadSubscription: Subscription = null;

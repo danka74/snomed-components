@@ -93,7 +93,6 @@
       }
     }
   },
-  "defaultProject": "snomed-components",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

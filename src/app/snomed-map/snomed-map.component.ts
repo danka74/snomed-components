@@ -2,7 +2,7 @@ import { ViewChild } from '@angular/core';
 import { Input } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { SnomedService } from '../snomed.service';
@@ -14,8 +14,8 @@ import { SnomedService } from '../snomed.service';
 })
 export class SnomedMapComponent implements OnInit {
 
-  snomedForm: FormGroup = new FormGroup({
-    mapTarget: new FormControl()
+  snomedForm: UntypedFormGroup = new UntypedFormGroup({
+    mapTarget: new UntypedFormControl()
   });
 
   @ViewChild('mapTarget') mapTarget: ElementRef<HTMLSpanElement>;
